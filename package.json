@@ -1,0 +1,31 @@
+{
+  "name": "pattern-game",
+  "version": "1.0.0",
+  "description": "A simple pattern matching game to learn EaselJS and TweenJS",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ReeseGarth/pattern-game.git"
+  },
+  "author": "Reese Garth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ReeseGarth/pattern-game/issues"
+  },
+  "homepage": "https://github.com/ReeseGarth/pattern-game/public/index.html",
+  "dependencies": {
+    "express": "^4.13.4"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.11.1",
+    "browserify": "^13.0.0",
+    "gulp-load-plugins": "^1.2.0",
+    "gulp-nodemon": "^2.0.6",
+    "gulp-util": "^3.0.7",
+    "watchify": "^3.7.0"
+  }
+}
