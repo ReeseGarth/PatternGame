@@ -4,6 +4,8 @@
 
 module.exports = function(canvasWidth, canvasHeight) {
 
+	var createjs = require('createjs-collection');
+
 	var stage = new createjs.Stage("gameCanvas");
 
 	var squareOne = new createjs.Shape(),
@@ -12,13 +14,14 @@ module.exports = function(canvasWidth, canvasHeight) {
 		squareFour = new createjs.Shape();
 
 	// the dimensions of the squares
-	var squareWidth = canvasWidth * 0.3,
-		squareHeight = canvasHeight * 0.3;
+	var squareWidth = canvasWidth * 0.4,
+		squareHeight = canvasHeight * 0.4,
+		centerWidth = canvasWidth / 2,
+		centerHeight = canvasHeight / 2;
 
 	// starting position (square one) and offsets (all other squares)
-
-	var xOffset = 100,
-		yOffset = 100;
+	var xOffset = centerWidth - squareWidth - 5,
+		yOffset = centerHeight - squareHeight - 5;
 
 	// spacing between squares
 	var spacing = 10;
