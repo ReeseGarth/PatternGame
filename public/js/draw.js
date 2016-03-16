@@ -1,6 +1,8 @@
 'use strict'
 
-module.exports = function() {
+// TODO: resize or reposition shapes based on media size
+
+module.exports = function(canvasWidth, canvasHeight) {
 
 	var stage = new createjs.Stage("gameCanvas");
 
@@ -9,18 +11,35 @@ module.exports = function() {
 		squareThree = new createjs.Shape(),
 		squareFour = new createjs.Shape();
 
+	// the dimensions of the squares
+	var squareWidth = canvasWidth * 0.3,
+		squareHeight = canvasHeight * 0.3;
+
+	// starting position (square one) and offsets (all other squares)
+
+	var xOffset = 100,
+		yOffset = 100;
+
+	// spacing between squares
+	var spacing = 10;
+
 	// rectangle params - x, y, width, height
-	squareOne.graphics.beginFill("red").drawRect(100, 100, 100, 100);
+	squareOne.graphics.beginFill("red").drawRect(xOffset, yOffset, squareWidth, squareHeight);
 	stage.addChild(squareOne);
 
-	squareTwo.graphics.beginFill("green").drawRect(300, 100, 100, 100);
+	squareTwo.graphics.beginFill("green").drawRect(0, yOffset, squareWidth, squareHeight);
+	squareTwo.x = xOffset + squareWidth + spacing; // square 2 positioning
 	stage.addChild(squareTwo);
 
-	squareThree.graphics.beginFill("blue").drawRect(100, 300, 100, 100);
+	squareThree.graphics.beginFill("blue").drawRect(xOffset, 0, squareWidth, squareHeight);
+	squareThree.y = yOffset + squareHeight + spacing; // square 3 positioning
 	stage.addChild(squareThree);
 
-	squareFour.graphics.beginFill("yellow").drawRect(300, 300, 100, 100);
+	squareFour.graphics.beginFill("yellow").drawRect(0, 0, squareWidth, squareHeight);
+	squareFour.x = xOffset + squareWidth + spacing; // square 4 positioning
+	squareFour.y = yOffset + squareHeight + spacing; // square 4 positioning
 	stage.addChild(squareFour);
+	
 
 	/* 
 		-Changing x moves the shape horizonatally

@@ -10,10 +10,19 @@ module.exports = function () {
 
 	function resizeCanvas() {
 
-		canvas.width = window.innerWidth - (window.innerWidth * 0.2);
-		canvas.height = window.innerWidth - (window.innerHeight * 0.4);
+		var width = window.innerWidth,
+			height = window.innerHeight;
 
-		draw();
+		if (width > height) {
+			canvas.width = height - (height * 0.2);
+			canvas.height = height - (height * 0.2);
+		} else {
+			canvas.width = width - (width * 0.2);
+			canvas.height = width - (width * 0.2);
+		}
+
+		draw(canvas.width, canvas.height);
+
 	}
 
 	resizeCanvas();
