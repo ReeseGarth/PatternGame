@@ -2,7 +2,7 @@ var gulp = require('gulp'),
 	browserify = require('browserify'),
 	watchify = require('watchify'),
 	browserSync = require('browser-sync'),
-	sourceFile = 'main.js',
+	source = require('vinyl-source-stream'),
 	destFile = 'bundle.js';
 
 var gulpPlugins = require('gulp-load-plugins')({
@@ -22,7 +22,7 @@ var paths = {
 gulp.task('watch',function() {
 	//browserify config
 	var watcher = watchify(browserify({
-		entries: ['./public/main.js'],
+		entries: ['./public/js/main.js'],
 		cache: {},
 		packageCache: {},
 		plugin: [watchify],
@@ -41,6 +41,13 @@ gulp.task('watch',function() {
 		.bundle()
 		.pipe(source(destFile))
 		.pipe(gulp.dest(paths.srcJS));
+});
+
+gulp.task('copy-bootstrap', function() {
+	gulp.src('node_modules/bootstrap/dist/css/*')
+		.pipe(gulp.dest(paths.srcCSS));
+	gulp.src('node_modules/bootstrap/dist/fonts/*')
+		.pipe(gulp.dest(paths.srcFONT));
 });
 
 gulp.task('browser-sync', ['nodemon'], function() {
@@ -65,4 +72,4 @@ gulp.task('nodemon', function(cb) {
 	});
 });
 
-gulp.task('default', ['browser-sync']);
+gulp.task('default', ['watch', 'copy-bootstrap', 'browser-sync']);
