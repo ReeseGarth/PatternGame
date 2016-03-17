@@ -15,6 +15,7 @@
 
 		<link type="text/css" href="css/bootstrap.min.css" rel="stylesheet">
 		<link type="text/css" href="css/styles.css" rel="stylesheet">
+		<link type="text/css" href="css/font-awesome.min.css" rel="stylesheet">
 
 	</head>
 	<body>
@@ -25,19 +26,34 @@
 			</header>
 			<main id="mainPage" role="main">
 				<div id="gameContent">
-					<div>
-						<div class="col-xs-2 col-sm-2 col-md-2 col-lg-3"></div>
-						<div class="col-xs-9 col-sm-8 col-lg-8">
+					<div class="row">
+						<div class="col-xs-2 col-md-3"></div>
+						<div class="col-xs-8 col-md-6">
+						<h2 id="roundCounter">Round: </h2>
 							<section id="gameSection">
 								<canvas id="gameCanvas"></canvas>
 							</section>
 						</div>
-						<div class="col-xs-1"></div>
+						<div class="col-xs-2 col-md-3"></div>
 					</div>
 				</div>
 			</main>
 		</div>
-		
+		<div class="container">
+			<footer id="simplePatternFooter" class="footer">
+				<div class="row">
+					<div class="col-sm-12">
+						<small>Developed by <b>Reese Garth</b>. Check out the source code at my Github account below!</small>
+						<ul class="list-inline social">
+							<li><a href="https://twitter.com/ReeseGarth" target="_blank"><i class="fa fa-lg fa-twitter"></i></a></li>
+							<li><a href="https://ca.linkedin.com/in/reesegarth" target="_blank"><i class="fa fa-lg fa-linkedin"></i></a></li>
+							<li><a href="https://github.com/ReeseGarth" target="_blank"><i class="fa fa-lg fa-github"></i></a></li>
+							<li><a href="mailto:reese.garth@gmail.com" target="_blank"><i class="fa fa-lg fa-envelope"></i></a></li>
+						</ul>
+					</div>
+				</div>
+			</footer>
+		</div>
 		<script type="text/javascript" src="js/bundle.js"></script>
 	</body>
 </html>
