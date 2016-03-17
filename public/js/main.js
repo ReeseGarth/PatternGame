@@ -6,4 +6,8 @@
 
 	resize();
 
+	var randomInt = require('./randomIntFromInterval');
+
+	var randomSquare = randomInt(1, 4);
+
 })();
