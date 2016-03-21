@@ -34,8 +34,16 @@ h1 {
 	}
 }
 
-#roundCounter {
-	margin-left: 5vw;
+@media (min-width: 767px) {
+	#roundCounter {
+		margin-left: 4vw;
+	}
+}
+
+@media (min-width: 1200px) {
+	#roundCounter {
+		margin-left: 5vw;
+	}
 }
 
 .footer {
