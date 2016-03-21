@@ -5,7 +5,8 @@
 	var init = require('./init'),
 		draw = require('./drawSquares'),
 		sequence = require('./startRandomSequence'),
-		$ = require('jquery');
+		$ = require('jquery'),
+		enquireStyles = require('./enquireJSStyles');
 
 	global.jQuery = $;
 
@@ -26,16 +27,33 @@
 		// setup the stage
 		stage = init();
 
+		// apply media query styles
+		enquireStyles();
+
 		// draw squares onto the stage
 		draw(stage, false);
 
 		// display game rules and how to play
 		$('#gameModal').modal('show');
 
-		// begin game with start button press
-		sequence(stage);
-		
 		console.log('initialized');
+
+	};
+
+	// begin game with start button press
+	var startBtn = document.getElementById('startButton');
+
+	startBtn.onclick = function(e) {
+
+		// user can't spam the start button
+		startBtn.disabled = true;
+
+		console.log("begin sequence");
+
+		// begin the sequence
+		sequence(stage);
+
+		
 	};
 
 	window.addEventListener('resize', resize, false);

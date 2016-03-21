@@ -64,6 +64,11 @@ module.exports = function(stage, resized) {
 		square.shadow = new createjs.Shadow("#000", 5, 5, 10);
 		square.x = getXPosition(square.id);
 		square.y = getYPosition(square.id);
+
+		square.on("click", function(event) {
+
+		});
+
 		stage.addChild(square);
 
 	};
