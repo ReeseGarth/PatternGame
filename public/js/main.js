@@ -3,7 +3,15 @@
 	'use strict'
 
 	var init = require('./init'),
-		draw = require('./drawSquares');
+		draw = require('./drawSquares'),
+		sequence = require('./startRandomSequence'),
+		$ = require('jquery');
+
+	global.jQuery = $;
+
+	require('bootstrap');
+
+	var stage;
 
 	// Polling for the sake of my intern tests
 	var interval = setInterval(function() {
@@ -15,24 +23,27 @@
 
 	function done() {
 
-		window.addEventListener('resize', resize, false);
+		// setup the stage
+		stage = init();
 
-		var stage = init();
+		// draw squares onto the stage
 		draw(stage, false);
-		console.log('complete');
 
-		function resize() {
+		// display game rules and how to play
+		$('#gameModal').modal('show');
 
-			draw(stage, true);
+		// begin game with start button press
+		sequence(stage);
+		
+		console.log('initialized');
+	};
 
-		}
+	window.addEventListener('resize', resize, false);
 
-	}
+	function resize() {
 
-	
+		draw(stage, true);
 
-	var randomInt = require('./randomIntFromInterval');
-
-	var randomSquare = randomInt(1, 4);
+	};
 
 })();

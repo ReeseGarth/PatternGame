@@ -19,7 +19,8 @@
   "homepage": "https://github.com/ReeseGarth/pattern-game/public/index.html",
   "dependencies": {
     "createjs-collection": "^0.8.2-1",
-    "express": "^4.13.4"
+    "express": "^4.13.4",
+    "jquery": "^2.2.2"
   },
   "devDependencies": {
     "browser-sync": "^2.11.1",

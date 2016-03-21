@@ -7,8 +7,8 @@ module.exports = function(stage, resized) {
 	var squareWidth, squareHeight, xOffset, yOffset, spacing;
 
 	setStageSize();
-	getSquareDimensions();
-	getOffsets();
+	setSquareDimensions();
+	setOffsets();
 
 	for (var i = 0; i < 4; i++) {
 		if (!resized)
@@ -38,7 +38,7 @@ module.exports = function(stage, resized) {
 
 	};
 
-	function getSquareDimensions() {
+	function setSquareDimensions() {
 
 		// square dimensions
 		squareWidth = stage.canvas.width * 0.4;
@@ -46,7 +46,7 @@ module.exports = function(stage, resized) {
 
 	};
 
-	function getOffsets() {
+	function setOffsets() {
 
 		// x and y offsets from center for square positioning
 		xOffset = (stage.canvas.width / 2) - squareWidth - 5;
