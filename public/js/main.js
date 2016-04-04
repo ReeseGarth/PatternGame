@@ -4,6 +4,7 @@
 
 	var createjs = require('createjs-collection'),
 		squareNum = require('./randomIntFromInterval'),
+		enquireStyles = require('./enquireJSStyles'),
 		$ = require('jquery');
 
 	global.jQuery = $;
@@ -205,15 +206,23 @@
 	// game starting function
 	function runGame() {
 		
+		// apply media query styles
+		enquireStyles();
+
 		console.log('starting');
+
+		// display game rules and how to play
+		$('#gameModal').modal('show');
 
 		function startRound(n) {
 
 			var gameOutput = document.getElementById("gameOutput");
 			runRound(new Round(n), function(status) {
 				if (status == "lost") {
+					gameOutput.className = "alert alert-danger";
 					gameOutput.innerHTML = "You entered the incorrect sequence. Better luck next time!";
 				} else {
+					gameOutput.className = "alert alert-success";
 					gameOutput.innerHTML = "Nice going, you got the right sequence!";
 					// allow user to begin round in 5 secs
 					setTimeout(function() { startRound(n + 1); }, 5000);
@@ -238,6 +247,7 @@
 		roundCount.innerHTML = "Round: " + (round.roundNum - 3);
 		startBtn.disabled = false;
 		gameOutput.innerHTML = "";
+		gameOutput.className = "";
 
 		console.log('beginning round');
 
