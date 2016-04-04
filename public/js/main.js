@@ -112,21 +112,45 @@
 
 	};
 
+	Display.prototype.calcSquareWidth = function() {
+
+		return this.stage.canvas.width * 0.4;
+
+	};
+
+	Display.prototype.calcSquareHeight = function() {
+
+		return this.stage.canvas.height * 0.4;
+
+	};
+
+	Display.prototype.calcXOffset = function() {
+
+		return (this.stage.canvas.width / 2) - this.calcSquareWidth() - 5;
+
+	};
+
+	Display.prototype.calcYOffset = function() {
+
+		return (this.stage.canvas.height / 2) - this.calcSquareHeight() - 5;
+
+	};
+
 	Display.prototype.getXPosition = function(squareId) {
 
 		if (squareId === 0 || squareId === 2) 
-			return this.xOffset;
+			return this.calcXOffset();
 		else 
-			return this.xOffset + this.squareWidth + this.spacing;
+			return this.calcXOffset() + this.calcSquareWidth() + this.spacing;
 
 	};
 
 	Display.prototype.getYPosition = function(squareId) {
 
 		if (squareId === 0 || squareId === 1) 
-			return this.yOffset;
+			return this.calcYOffset();
 		else 
-			return this.yOffset + this.squareHeight + this.spacing;
+			return this.calcYOffset() + this.calcSquareHeight() + this.spacing;
 
 	};
 
@@ -140,10 +164,10 @@
 			if (!resized) {
 				var square = new createjs.Shape();
 			} else {
-				var square = this.stage.getChildAt(i);
+				var square = this.stage.getChildAt(0);
 				square.graphics.clear();
 			}
-			square.graphics.beginFill(colors[i]).drawRect(0, 0, this.squareWidth, this.squareHeight);
+			square.graphics.beginFill(colors[i]).drawRect(0, 0, this.calcSquareWidth(), this.calcSquareHeight())
 			square.shadow = new createjs.Shadow("#000", 5, 5, 10);
 			square.x = this.getXPosition(i);
 			square.y = this.getYPosition(i);
@@ -172,13 +196,8 @@
 	function Display(parent, round) {
 
 		this.stage = new createjs.Stage(document.getElementById('gameCanvas'));
-		this.setStageSize(parent);
+		this.parent = parent;
 		this.round = round;
-
-		this.squareWidth = this.stage.canvas.width * 0.4;
-		this.squareHeight = this.stage.canvas.width * 0.4;
-		this.xOffset = (this.stage.canvas.width / 2) - this.squareWidth - 5;
-		this.yOffset = (this.stage.canvas.height / 2) - this.squareHeight - 5;
 		this.spacing = 10;
 
 	}
@@ -187,6 +206,7 @@
 	function runGame() {
 		
 		console.log('starting');
+
 		function startRound(n) {
 
 			var gameOutput = document.getElementById("gameOutput");
@@ -223,7 +243,18 @@
 
 		// initialize the stage and shapes
 		display.init();
+		display.setStageSize(display.parent);
 		display.drawSquares(false);
+
+		window.addEventListener('resize', resize, false);
+
+		// resizes the game display and redraws the squares accordingly
+		function resize() {
+
+			display.setStageSize(display.parent);
+			display.drawSquares(true);
+
+		};
 
 		startBtn.onclick = function(e) {
 
