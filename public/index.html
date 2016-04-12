@@ -25,10 +25,6 @@
 				<h1>Simple Pattern!</h1>
 			</header>
 			<main id="mainPage" role="main">
-				<div style="text-align: center">
-					<button class="btn btn-success btn-md" type="button" id="startButton">Start!</button>
-					<button class="btn btn-primary btn-md" type="button" id="submitButton">Submit Answer</button>
-				</div>
 				<div class="modal" tabindex="-1" role="dialog" id="gameModal">
 					<div class="modal-dialog">
 						<div class="modal-content">
@@ -39,11 +35,45 @@
 				        		<h4 class="modal-title">Welcome to Simple Pattern!</h4>
 				      		</div>
 				      		<div class="modal-body">
-				        		<p>The game is a simple memory game. When you are ready to start, click the start button and a random sequence of squares will fade out and then back in. Remember this sequence because once it has stopped playing it is your job to enter the exact same sequence. Each time you get the sequence correct you go to the next round, but if you guess wrong it's game over! The rounds also get progressively harder with faster and longer sequences. Have fun and good luck!</p>
+				        		<p>The game is a simple memory game. Once you are ready, click the start button and the game will begin by generating a random sequence of squares will fade out and then back in. Remember this sequence because once it has stopped playing it is your job to enter the exact same sequence. Each time you get the sequence correct you go to the next round, but if you guess wrong it's game over! The rounds also get progressively harder with longer sequences. Have fun and good luck!</p>
 				      		</div>
 				     	 	<div class="modal-footer">
-				        		<button type="button" class="btn btn-default" data-dismiss="modal">
-				        			Close
+				        		<button type="button" id="startButton" class="btn btn-success" data-dismiss="modal">
+				        			Start!
+				        		</button>
+				      		</div>
+				    	</div><!-- /.modal-content -->
+				  	</div><!-- /.modal-dialog -->
+				</div><!-- /.modal -->
+				<div class="modal" tabindex="-1" role="dialog" id="successModal">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+				        		<h4 class="modal-title">Success</h4>
+				      		</div>
+				      		<div class="modal-body center">
+				        		Nice going! You entered the correct sequence. Click start when you are ready for the next round.
+				      		</div>
+				     	 	<div class="modal-footer">
+				        		<button type="button" id="nextRoundButton" class="btn btn-success" data-dismiss="modal">
+				        			Start
+				        		</button>
+				      		</div>
+				    	</div><!-- /.modal-content -->
+				  	</div><!-- /.modal-dialog -->
+				</div><!-- /.modal -->
+				<div class="modal" tabindex="-1" role="dialog" id="failedModal">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+				        		<h4 class="modal-title">Incorrect Sequence</h4>
+				      		</div>
+				      		<div class="modal-body center">
+				        		Too bad, you entered the incorrect sequence. You made it to round #. Hit replay to try again!
+				      		</div>
+				     	 	<div class="modal-footer">
+				        		<button type="button" id="replayButton" class="btn btn-primary" data-dismiss="modal">
+				        			Replay
 				        		</button>
 				      		</div>
 				    	</div><!-- /.modal-content -->
@@ -53,11 +83,18 @@
 					<div class="row">
 						<div class="col-xs-2 col-md-3"></div>
 						<div class="col-xs-8 col-md-6">
-						<h2 id="roundCount"></h2>
-							<section id="gameSection">
+							<h2 id="roundCount"></h2>
+							<section id="gameSection" class="center">
 								<canvas id="gameCanvas"></canvas>
 							</section>
-						<p id="gameOutput" style="text-align: center"></p>
+							<section id="playerOutputSection">
+								<label for="playerOutput">Output:</label>
+								<textarea id="playerOutput"></textarea>
+								<div class="center">
+									<button class="btn btn-danger btn-md" type="button" id="resetButton">Clear Answer</button>
+									<button class="btn btn-primary btn-md" type="button" id="submitButton">Submit Answer</button>
+								</div>
+							</section>
 						</div>
 						<div class="col-xs-2 col-md-3"></div>
 					</div>
@@ -65,7 +102,7 @@
 			</main>
 		</div>
 		<div class="container">
-			<footer id="simplePatternFooter" class="footer">
+			<footer id="simplePatternFooter" class="center">
 				<div class="row">
 					<div class="col-sm-12">
 						<small>Developed by <b>Reese Garth</b>. Check out the source code at my Github account below!</small>
