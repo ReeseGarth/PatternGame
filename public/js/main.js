@@ -12,6 +12,10 @@
 	require('bootstrap');
 
 	var update = true;
+	var listeners = [];
+
+	var playerOutput = document.getElementById("playerOutput"),
+		stage = new createjs.Stage(document.getElementById('gameCanvas'));
 
 	/** ROUND OBJECT **/
 	Round.prototype.isFinished = function() {
@@ -32,7 +36,6 @@
 
 		for (var i = 0; i < this.roundNum; i++) {
 			var square = stage.getChildAt(squareNum(0, 3));
-
 			this.generatedSequence.push(square);
 		}
 
@@ -47,17 +50,19 @@
 		var won = true;
 
 		for (var i = 0; i < this.generatedSequence.length; i++) {
-			if (this.generatedSequence[i] != this.playerSequence[i])
+			if (this.playerSequence[i] === undefined) {
 				won = false;
+				break;
+			} else if (this.generatedSequence[i].name != this.playerSequence[i].name) {
+				won = false;
+				break;
+			}
 		}
 
-		if (won && this.status == null) {
+		if (won && this.status == null)
 			this.status = "won";
-			this.finishDelay = 1;
-		} else {
+		else 
 			this.status = "lost";
-			this.finishDelay = 1;
-		}
 
 	};
 
@@ -155,15 +160,16 @@
 
 	};
 
-	Display.prototype.drawSquares = function(resized) {
+	Display.prototype.drawSquares = function(resized, redraw) {
 
 		var colors = ["red", "green", "blue", "yellow"];
 
 		var self = this;
 
 		for (var i = 0; i < 4; i++) {
-			if (!resized) {
+			if (!resized && !redraw) {
 				var square = new createjs.Shape();
+				square.name = colors[i].charAt(0).toUpperCase();
 			} else {
 				var square = this.stage.getChildAt(0);
 				square.graphics.clear();
@@ -175,9 +181,25 @@
 
 			this.stage.addChild(square);
 
-			square.on("click", function(event) {
-				self.round.playerSequence.push(this);
-			});
+			if (redraw || !resized) {
+				// allows click event to be registered many times per round, but assigns
+				// only one click event
+				if (this.round.roundNum != 4)
+					square.off("click", listeners.shift());
+
+				var listener = square.on("click", function(event) {
+					self.round.playerSequence.push(this);
+					if (playerOutput.value == "Sequence Complete.") 
+						playerOutput.value = this.name;
+					else
+						playerOutput.value += ", " + this.name;
+				});
+
+				listeners.push(listener);
+
+				// don't allow click event until after sequence is complete
+				square.mouseEnabled = false;
+			}
 			
 		}
 
@@ -187,19 +209,21 @@
 
 	};
 
-	Display.prototype.clear = function() {
-
-		this.stage.removeAllChildren();
-		this.stage.update();
-
-	};
-
 	function Display(parent, round) {
 
-		this.stage = new createjs.Stage(document.getElementById('gameCanvas'));
+		this.stage = stage;
 		this.parent = parent;
 		this.round = round;
 		this.spacing = 10;
+
+	}
+
+	function setPlayerOutputSize(parent) {
+
+		var height = parent.offsetHeight, width = parent.offsetWidth;
+
+		playerOutput.style.height = 'auto';
+		playerOutput.style.width = width + 'px';
 
 	}
 
@@ -216,16 +240,12 @@
 
 		function startRound(n) {
 
-			var gameOutput = document.getElementById("gameOutput");
 			runRound(new Round(n), function(status) {
 				if (status == "lost") {
-					gameOutput.className = "alert alert-danger";
-					gameOutput.innerHTML = "You entered the incorrect sequence. Better luck next time!";
+					$('#failedModal').modal('show');
 				} else {
-					gameOutput.className = "alert alert-success";
-					gameOutput.innerHTML = "Nice going, you got the right sequence!";
-					// allow user to begin round in 5 secs
-					setTimeout(function() { startRound(n + 1); }, 5000);
+					$('#successModal').modal('show');
+					startRound(n + 1);
 				}
 			});
 
@@ -237,24 +257,34 @@
 
 	function runRound(round, next) {
 		var gameSection = document.getElementById('gameSection'),
-			gameOutput = document.getElementById("gameOutput"),
+			playerOutputSection = document.getElementById("playerOutputSection"),
 			roundCount = document.getElementById("roundCount"),
 			startBtn = document.getElementById('startButton'),
+			nextRoundBtn = document.getElementById('nextRoundButton'),
+			replayBtn = document.getElementById('replayButton'),
+			resetBtn = document.getElementById('resetButton'),
 			submitBtn = document.getElementById('submitButton');
+
+		roundCount.innerHTML = "Round: " + (round.roundNum - 3);
+		startBtn.style.display = "inline";
+		resetBtn.style.display = "none";
+		submitBtn.style.display = "none";
+
+		setPlayerOutputSize(playerOutputSection);
+
+		playerOutput.value = 'Ready to Start...';
 
 		var display = new Display(gameSection, round);
 
-		roundCount.innerHTML = "Round: " + (round.roundNum - 3);
-		startBtn.disabled = false;
-		gameOutput.innerHTML = "";
-		gameOutput.className = "";
-
-		console.log('beginning round');
-
-		// initialize the stage and shapes
 		display.init();
 		display.setStageSize(display.parent);
-		display.drawSquares(false);
+
+		console.log(round.roundNum);
+
+		if (round.roundNum === 4) // create squares only if first round
+			display.drawSquares(false, false);
+		else 
+			display.drawSquares(false, true);
 
 		window.addEventListener('resize', resize, false);
 
@@ -262,16 +292,14 @@
 		function resize() {
 
 			display.setStageSize(display.parent);
-			display.drawSquares(true);
+			display.drawSquares(true, false);
+			setPlayerOutputSize(playerOutputSection);
 
 		};
 
-		startBtn.onclick = function(e) {
+		function startRound() {
 
-			// user can't spam the start button
-			startBtn.disabled = true;
-
-			console.log("begin sequence");
+			playerOutput.value = 'Displaying Sequence...';
 
 			round.generateRandomSequence(display.stage);
 
@@ -287,12 +315,58 @@
 
 			}
 
+			// enable click event after total time to run animations (round * 3000)
+			setTimeout(function() { 
+				for (var i = 0; i < display.stage.children.length; i++) {
+					display.stage.getChildAt(i).mouseEnabled = true;
+				}
+
+				resetBtn.style.display = "inline";
+				submitBtn.style.display = "inline";
+				playerOutput.value = 'Sequence Complete.';
+			}, round.roundNum * 3000);
+		};
+
+		function resetStage() {
+
+			stage.removeAllChildren();
+			stage.clear();
+			stage.update();
+			stage = {};
+			return new createjs.Stage(document.getElementById('gameCanvas'));
+
+		}
+
+		startBtn.onclick = function(e) {
+
+			startRound();
+
+		}
+
+		nextRoundBtn.onclick = function(e) {
+
+			startRound();
+
+		}
+
+		replayBtn.onclick = function(e) {
+
+			stage = resetStage(); // create fresh new stage
+			listeners = []; // clean up events attached to old squares
+			runGame();
+
+		}
+
+		resetBtn.onclick = function(e) {
+
+			round.playerSequence.length = 0;
+			playerOutput.value = "";
+
 		}
 
 		submitBtn.onclick = function(e) {
 
 			round.sequenceSubmitted();
-			
 			next(round.status);
 
 		}
