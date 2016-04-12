@@ -189,7 +189,7 @@
 
 				var listener = square.on("click", function(event) {
 					self.round.playerSequence.push(this);
-					if (playerOutput.value == "Sequence Complete.") 
+					if (playerOutput.value == "Sequence Complete." || playerOutput.value == "") 
 						playerOutput.value = this.name;
 					else
 						playerOutput.value += ", " + this.name;
@@ -243,6 +243,7 @@
 			runRound(new Round(n), function(status) {
 				if (status == "lost") {
 					$('#failedModal').modal('show');
+					document.getElementById('roundNumber').innerHTML = n-3;
 				} else {
 					$('#successModal').modal('show');
 					startRound(n + 1);
