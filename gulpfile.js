@@ -1,8 +1,9 @@
 var gulp = require('gulp'),
 	browserify = require('browserify'),
 	watchify = require('watchify'),
-	browserSync = require('browser-sync'),
 	source = require('vinyl-source-stream'),
+	browserSync = require('browser-sync').create(),
+	reload = browserSync.reload,
 	destFile = 'bundle.js';
 
 var gulpPlugins = require('gulp-load-plugins')({
@@ -15,7 +16,6 @@ var paths = {
 	srcJS: 'public/js/',
 	srcCSS: 'public/css/',
 	srcFONT: 'public/fonts/',
-	dist: 'public/dist/',
 	test: 'test/'
 };
 
@@ -50,26 +50,17 @@ gulp.task('copy-bootstrap', function() {
 		.pipe(gulp.dest(paths.srcFONT));
 });
 
-gulp.task('browser-sync', ['nodemon'], function() {
+gulp.task('serve', function() {
+
+
 	browserSync.init({
-		proxy: "http://localhost:3000",
-		files: ['public/**/*.*'],
-		browser: 'google chrome',
-		port: 5000
-	});
-});
-
-gulp.task('nodemon', function(cb) {
-	var started = false;
-
-	return gulpPlugins.nodemon({
-		script: 'server.js'
-	}).on('start', function() {
-		if (!started) {
-			cb();
-			started = true;
+		server: {
+			baseDir: "public",
+			index: "index.html"
 		}
 	});
+
+	gulp.watch("public/*.html").on("change", reload);
 });
 
-gulp.task('default', ['watch', 'copy-bootstrap', 'browser-sync']);
+gulp.task('default', ['watch', 'copy-bootstrap', 'serve']);
